@@ -7,8 +7,41 @@ const cors        = require('cors');
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
+const mongoose = require('mongoose');
 
 const app = express();
+
+app.use(helmet({
+  frameguard: {         // configure
+    action: 'deny'
+  },
+  contentSecurityPolicy: {    // enable and configure
+    directives: {
+      defaultSrc: ["'none'"],
+      styleSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      FormAction: ["'self'"],
+      baseUri: ["'self'"],
+      frameAncestors: ["'self'"]
+    }
+  },
+  dnsPrefetchControl: false,     // disable,
+  xFrameOptions: { action: "deny" },
+  strictTransportSecurity: {
+    maxAge: ninetyDaysInSeconds,
+    includeSubDomains: true,
+    force: true,
+  }
+}));
+
+mongoose.connect(
+  process.env['MONGO_URI'])
+    .then(()=>{
+      console.log("We are connected to mongo db")
+    })
+    .catch((err) => {
+      console.log("Error unable to connect to mongo db", err);
+    });
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
