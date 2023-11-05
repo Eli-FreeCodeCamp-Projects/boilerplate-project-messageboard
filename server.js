@@ -20,10 +20,12 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'none'"],
       styleSrc: ["'self'"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", 'code.jquery.com'],
+      imgSrc: ["'self'", 'cdn.freecodecamp.org'],
       FormAction: ["'self'"],
       baseUri: ["'self'"],
-      frameAncestors: ["'self'"]
+      frameAncestors: ["'self'"],
+      connectSrc: ["'self'"],
     }
   },
   dnsPrefetchControl: false,     // disable,
