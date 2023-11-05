@@ -415,11 +415,11 @@ const threadsSchema = new mongoose.Schema(
                                 this.updateOne(
                                     {_id: threadId, 'replies._id': replyId},
                                     {
-                                        $pull: { replies: {_id: replyId}}
+                                        //$pull: { replies: {_id: replyId}}
+                                        $set: { replies: {text: "[deleted]"}}
                                     },
                                     {
-                                        returnDocument: 'after',
-                                        secure: true
+                                        returnDocument: 'after'
                                     })
                                 .slice('replies', 1)
                                 .then(deletedReply=>{
