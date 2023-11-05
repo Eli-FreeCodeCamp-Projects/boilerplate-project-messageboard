@@ -66,10 +66,10 @@ const assertIsValidThreadReply = (reply)=>{
         'reply should have a boolean reported value'
     )
 }
-suite('Mongo db unit tests', ()=>{
+suite('Mongo db unit tests', function(){
     this.timeout(8000);
-    suite('Test Thread model with invalid values', ()=>{
-        test('test addThread method with non string password property', (done) => {
+    suite('Test Thread model with invalid values', function(){
+        test('test addThread method with non string password property', function(done) {
             Thread.addThread('testBoard', 'Add unit test thread', {$gt: 'hello'})
                 .then(()=>{
                     done(new Error("addThread method should fail and reject promise"));
@@ -82,7 +82,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test addThread method with non string text property', (done) => {
+        test('test addThread method with non string text property', function(done) {
             Thread.addThread('testBoard', {$gt: 'hello'}, 'azerty')
                 .then(()=>{
                     done(new Error("addThread method should fail and reject promise"));
@@ -95,7 +95,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test addThread method with non string board property', (done) => {
+        test('test addThread method with non string board property', function(done) {
             Thread.addThread({$gt: 'hello'}, 'text', 'azerty')
                 .then(()=>{
                     done(new Error("addThread method should fail and reject promise"));
@@ -109,7 +109,7 @@ suite('Mongo db unit tests', ()=>{
         });
     });
     suite('Test Thread model with valid values', ()=>{
-        test('test addThread method', (done) => {
+        test('test addThread method', function(done) {
             Thread.addThread('testBoard', 'Add unit test thread', 'azerty')
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -124,7 +124,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test second addThread method', (done) => {
+        test('test second addThread method', function(done) {
             Thread.addThread('testBoard', 'Add unit test thread', 'azerty')
                 .then(thread=>{
                     assertIsValidThread(thread);
@@ -139,7 +139,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test reportThread method', (done) => {
+        test('test reportThread method', function(done) {
             Thread.reportThread(testIds.threadId)
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -154,7 +154,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test getThreads method', (done) => {
+        test('test getThreads method', function(done) {
             Thread.getThreads('testBoard')
                 .then(threads=>{
                     assertIsValidThread(threads[0])
@@ -173,7 +173,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test getThread method', (done) => {
+        test('test getThread method', function(done) {
             Thread.getThread(testIds.threadId)
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -187,7 +187,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test isThreadPassWord method with valid password', (done) => {
+        test('test isThreadPassWord method with valid password', function(done) {
             Thread.isThreadPassWord(testIds.threadId, 'azerty')
                 .then(({isMatch, thread})=>{
                     assertIsValidThread(thread)
@@ -201,7 +201,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test isThreadPassWord method with invalid password', (done) => {
+        test('test isThreadPassWord method with invalid password', function(done) {
             Thread.isThreadPassWord(testIds.threadId, 'BadPassword')
                 .then(({isMatch, thread})=>{
                     assert.isNull(
@@ -217,7 +217,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test deleteThread method with invalid password', (done) => {
+        test('test deleteThread method with invalid password', function(done) {
             Thread.deleteThread(testIds.threadId, 'BadPassword')
                 .then((isDeleted)=>{
                     assert.isFalse(
@@ -230,7 +230,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test deleteThread method with valid password', (done) => {
+        test('test deleteThread method with valid password', function(done) {
             Thread.deleteThread(testIds.threadId, 'azerty')
                 .then((isDeleted)=>{
                     assert.isTrue(
@@ -243,7 +243,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test if thread has realy been deleted by find it', (done) => {
+        test('test if thread has realy been deleted by find it', function(done) {
             Thread.getThread(testIds.threadId)
                 .then(thread=>{
                     assert.isNull(
@@ -257,7 +257,7 @@ suite('Mongo db unit tests', ()=>{
         });
 
 
-        test('test addReply method', (done) => {
+        test('test addReply method', function(done) {
             Thread.addReply(testIds.threadIdReplyTest, 'Add reply to unit test thread', 'azerty')
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -273,7 +273,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test add second reply', (done) => {
+        test('test add second reply', function(done) {
             Thread.addReply(testIds.threadIdReplyTest, 'Add reply 2 to unit test thread', 'azerty')
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -290,7 +290,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test getReplies method', (done) => {
+        test('test getReplies method', function(done) {
             Thread.getReplies(testIds.threadIdReplyTest)
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -306,7 +306,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test getReply method', (done) => {
+        test('test getReply method', function(done) {
             Thread.getReply(testIds.threadIdReplyTest, testIds.replyId)
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -321,7 +321,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test reportReply method', (done) => {
+        test('test reportReply method', function(done) {
             Thread.reportReply(testIds.threadIdReplyTest, testIds.replyId)
                 .then(thread=>{
                     assertIsValidThread(thread)
@@ -340,7 +340,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test isValidReplyPassWord method with invalid password', (done) => {
+        test('test isValidReplyPassWord method with invalid password', function(done) {
             Thread.isValidReplyPassWord(testIds.threadIdReplyTest, testIds.replyId, "BadPassword")
                 .then(({isMatch, thread})=>{
                     assert.isFalse(
@@ -358,7 +358,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test isValidReplyPassWord method with valid password', (done) => {
+        test('test isValidReplyPassWord method with valid password', function(done) {
             Thread.isValidReplyPassWord(testIds.threadIdReplyTest, testIds.replyId, "azerty")
                 .then(({isMatch, thread})=>{
                     assertIsValidThread(thread)
@@ -377,7 +377,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test deleteReply method with invalid password', (done) => {
+        test('test deleteReply method with invalid password', function(done) {
             Thread.deleteReply(testIds.threadIdReplyTest, testIds.replyId, "BadPassword")
                 .then((isDeleted)=>{
                     assert.isFalse(
@@ -391,7 +391,7 @@ suite('Mongo db unit tests', ()=>{
                 });
         });
 
-        test('test deleteReply method with valid password', (done) => {
+        test('test deleteReply method with valid password', function(done) {
             Thread.deleteReply(testIds.threadIdReplyTest, testIds.replyId, "azerty")
                 .then((isDeleted)=>{
                     assert.isTrue(
