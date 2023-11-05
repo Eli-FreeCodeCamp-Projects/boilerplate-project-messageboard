@@ -71,10 +71,10 @@ module.exports = function (app) {
         Thread.deleteThread(_id, delete_password)
           .then(result => {
             if (result) {
-              res.json("success")
+              res.json('success')
             }
             else {
-              res.json("incorrect password")
+              res.json('incorrect password')
             }
           })
           .catch(e => {
@@ -157,10 +157,10 @@ module.exports = function (app) {
           .then(isDeleted => {
             if (isDeleted === true) {
               req.body.reply_id = "[deleted]"
-              res.json("success")
+              res.json('success')
             }
             else {
-              res.json("incorrect password")
+              res.json('incorrect password')
             }
           })
           .catch(e => {
