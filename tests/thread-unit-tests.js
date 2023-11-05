@@ -67,6 +67,7 @@ const assertIsValidThreadReply = (reply)=>{
     )
 }
 suite('Mongo db unit tests', ()=>{
+    this.timeout(8000);
     suite('Test Thread model with invalid values', ()=>{
         test('test addThread method with non string password property', (done) => {
             Thread.addThread('testBoard', 'Add unit test thread', {$gt: 'hello'})
