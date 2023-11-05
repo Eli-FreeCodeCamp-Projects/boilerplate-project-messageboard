@@ -331,7 +331,8 @@ const threadsSchema = new mongoose.Schema(
                                 },
                                 {
                                     returnDocument: 'after',
-                                    sort: {'replies.created_on': -1}
+                                    sort: {'replies.created_on': -1},
+                                    markModified: 'bumped_on'
                                 })
                             .then(thread=>{                            
                                 resolve(thread)
