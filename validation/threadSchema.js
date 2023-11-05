@@ -1,8 +1,5 @@
 'use strict';
 const ObjectId = require('mongoose').Types.ObjectId;
-const bcrypt = require('bcrypt');
-const Thread = require('../models/Thread.js');
-const Ut = require('../utils/utils.js');
 const MongoHelper = require('../utils/mongoHelper.js');
 
 const threadSchema = {
@@ -71,17 +68,18 @@ const getRepliesSchema = {
 const postReplySchema = {
     thread_id: threadSchema._id,
     text: threadSchema.text,
-    password: threadSchema.password
+    delete_password: threadSchema.delete_password
 }
 
 const putReplySchema = {
-    reply_id: threadSchema._id,
-    report_id: threadSchema._id
+    thread_id: threadSchema._id,
+    reply_id: threadSchema._id
 }
 
 const deleteReplySchema = {
+    thread_id: threadSchema._id,
     reply_id: threadSchema._id,
-    report_id: threadSchema._id
+    delete_password: threadSchema.delete_password
 }
 
 
@@ -89,3 +87,7 @@ exports.getThreadSchema = getThreadSchema;
 exports.postThreadSchema = postThreadSchema;
 exports.putThreadSchema = putThreadSchema;
 exports.deleteThreadSchema = deleteThreadSchema;
+exports.getRepliesSchema = getRepliesSchema;
+exports.postReplySchema = postReplySchema;
+exports.putReplySchema = putReplySchema;
+exports.deleteReplySchema = deleteReplySchema;
