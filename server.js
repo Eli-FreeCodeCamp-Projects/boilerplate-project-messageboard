@@ -9,9 +9,9 @@ const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
-
 const app = express();
 
+//-> Set up helmet
 app.use(helmet({
   frameguard: {         // configure
     action: 'deny'
@@ -31,12 +31,15 @@ app.use(helmet({
   dnsPrefetchControl: false,     // disable,
   xFrameOptions: { action: "sameorigin" },
   strictTransportSecurity: {
-    maxAge: ninetyDaysInSeconds,
     includeSubDomains: true,
     force: true,
+  },
+  referrerPolicy:{
+    policy: "same-origin"
   }
 }));
 
+//-> Connect to mongo db
 mongoose.connect(
   process.env['MONGO_URI'])
     .then(()=>{
