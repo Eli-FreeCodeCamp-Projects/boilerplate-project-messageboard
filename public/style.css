@@ -34,3 +34,20 @@ body {
 #submitNewThread {
   margin: 50px;
 }
+
+spacer{
+  margin: 50px; 
+  margin-top: 200px;
+}
+
+.deleteButton{
+  margin-left: 5px;
+}
+
+.m-left-5{
+  margin-left: 5%;
+}
+
+.text-left{
+  text-align: left;
+}

@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./public/style.css">
+    <link rel="stylesheet" href="./public/style.css?v=1.0.0">
   </head>
   <body>
     <header>
@@ -22,8 +22,8 @@
          board
       </a>
     </h2>
-    <div id='testui' style='margin-left: 5%'>
-      <h2 style="text-align: left">API Tests:</h2>
+    <div id='testui' class='m-left-5'>
+      <h2 class="text-left">API Tests:</h2>
         <h4>New thread (POST /api/threads/:board)</h4>
         <form action="/api/threads/test" method="post" id="newThread">
           <input type='text' placeholder='board' id='board1' name='board' required=''><br>
@@ -75,74 +75,11 @@
           <input type="submit" value="Submit">
         </form>        
     </div>
-    <hr style='margin: 50px; margin-top: 200px'>
+    <hr class='spacer'>
     <!-- Your web-app is https, so your scripts need to be too -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
-    <script>
-      $(function() {
-        $('#newThread').submit(function(){
-          var board = $('#board1').val();
-          $(this).attr('action', "/api/threads/" + board);
-        });
-        $('#newReply').submit(function(){
-          var board = $('#board4').val();
-          $(this).attr('action', "/api/replies/" + board);
-        });
-        $('#reportThread').submit(function(e){
-          var url = "/api/threads/"+$('#board2').val();
-          $.ajax({
-            type: "PUT",
-            url: url,
-            data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
-          });
-          e.preventDefault();
-        });
-        $('#deleteThread').submit(function(e){
-          var url = "/api/threads/"+$('#board3').val();
-          $.ajax({
-            type: "DELETE",
-            url: url,
-            data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
-          });
-          e.preventDefault();
-        });
-        $('#reportReply').submit(function(e){
-          var url = "/api/replies/"+$('#board5').val();
-          $.ajax({
-            type: "PUT",
-            url: url,
-            data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
-          });
-          e.preventDefault();
-        });
-        $('#deleteReply').submit(function(e){
-          var url = "/api/replies/"+$('#board6').val();
-          $.ajax({
-            type: "DELETE",
-            url: url,
-            data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
-          });
-          e.preventDefault();
-        });
-      });
-   </script>
+    <script src="./public/main.js?v=1.0.0" type="text/javascript"></script>
   </body>
 </html>
