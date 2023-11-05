@@ -153,7 +153,6 @@ suite('Functional Tests', function() {
                     assert.isObject(res.body.replies[0])
                     assert.strictEqual(res.body.replies[0].text, 'My first reply');
                     assert.isString(res.body.replies[0]._id);
-                    assert.isFalse(res.body.replies[0].reported);
                     done();
                 });
         });

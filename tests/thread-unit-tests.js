@@ -1,11 +1,10 @@
 const chai = require('chai');
 const assert = chai.assert;
 const Ut = require('../utils/utils');
-let mongoose = require('mongoose')
 const Thread = require('../models/Thread');
 let testIds={}
 
-const assertIsValidThread = (thread)=>{
+const IsValidCommonThread = (thread)=>{
     assert.isObject(
         thread, 
         'The method sould return a thread object'
@@ -18,13 +17,31 @@ const assertIsValidThread = (thread)=>{
         thread.text, 
         'Thread should have a string text value'
     )
+    assert.isArray(
+        thread.replies,
+        'Thread object must contain an array of replies.'
+    )
+}
+const IsValidShowThread = (thread)=>{
+    IsValidCommonThread(thread)
+    assert.isString(
+        thread.created_on, 
+        'Thread should have a string created_on value'
+    )
     assert.isString(
         thread.bumped_on, 
         'Thread should have a string bumped_on value'
     )
-    assert.isString(
-        thread.created_on, 
-        'Thread should have a string created_on value'
+}
+const IsValidObjectThread = (thread)=>{
+    IsValidCommonThread(thread)
+    assert.isTrue(
+        Ut.isObject(thread.bumped_on), 
+        'Thread should have a bumped_on date object value.'
+    )
+    assert.isTrue(
+        Ut.isObject(thread.created_on), 
+        'Thread should have a created_on date object value'
     )
     assert.isString(
         thread.delete_password, 
@@ -34,13 +51,9 @@ const assertIsValidThread = (thread)=>{
         thread.reported, 
         'Thread should have a boolean reported value'
     )
-    assert.isArray(
-        thread.replies,
-        'Thread object must contain an array of replies.'
-    )
 }
 
-const assertIsValidThreadReply = (reply)=>{
+const IsValidCommonReplyThread = (reply)=>{
     assert.isObject(
         reply, 
         'The method sould return a reply object'
@@ -53,13 +66,25 @@ const assertIsValidThreadReply = (reply)=>{
         reply.text, 
         'reply should have a string text value'
     )
+}
+
+const IsValidShowReplyThread = (reply)=>{
+    IsValidCommonReplyThread(reply)
     assert.isString(
         reply.created_on, 
         'reply should have a string created_on value'
     )
+}
+
+const IsValidObjectReplyThread = (reply)=>{
+    IsValidCommonReplyThread(reply)
+    assert.isTrue(
+        Ut.isObject(reply.created_on), 
+        'reply should have a created_on date object value.'
+    )
     assert.isString(
         reply.delete_password, 
-        'reply should have a string delete_password value'
+        'reply should have a delete_password date object value'
     )
     assert.isBoolean(
         reply.reported, 
@@ -112,7 +137,7 @@ suite('Mongo db unit tests', function(){
         test('test addThread method', function(done) {
             Thread.addThread('testBoard', 'Add unit test thread', 'azerty')
                 .then(thread=>{
-                    assertIsValidThread(thread)
+                    IsValidObjectThread(thread)
                     assert.strictEqual(
                         thread.replies.length, 0,
                         'Array of replies should have length 0');
@@ -127,7 +152,7 @@ suite('Mongo db unit tests', function(){
         test('test second addThread method', function(done) {
             Thread.addThread('testBoard', 'Add unit test thread', 'azerty')
                 .then(thread=>{
-                    assertIsValidThread(thread);
+                    IsValidObjectThread(thread);
                     assert.strictEqual(
                         thread.replies.length, 0,
                         'Array of replies should have length 0');
@@ -142,7 +167,7 @@ suite('Mongo db unit tests', function(){
         test('test reportThread method', function(done) {
             Thread.reportThread(testIds.threadId)
                 .then(thread=>{
-                    assertIsValidThread(thread)
+                    IsValidObjectThread(thread)
                     assert.isTrue(
                         thread.reported,
                         'Thread sould be reported'
@@ -157,8 +182,8 @@ suite('Mongo db unit tests', function(){
         test('test getThreads method', function(done) {
             Thread.getThreads('testBoard')
                 .then(threads=>{
-                    assertIsValidThread(threads[0])
-                    assertIsValidThread(threads[1])
+                    IsValidShowThread(threads[0])
+                    IsValidShowThread(threads[1])
                     assert.isArray(
                         threads,
                         'The method sould return an array of threads.'
@@ -176,7 +201,7 @@ suite('Mongo db unit tests', function(){
         test('test getThread method', function(done) {
             Thread.getThread(testIds.threadId)
                 .then(thread=>{
-                    assertIsValidThread(thread)
+                    IsValidObjectThread(thread)
                     assert.strictEqual(
                         thread.replies.length, 0,
                         'Array of replies should have length 0');
@@ -190,7 +215,7 @@ suite('Mongo db unit tests', function(){
         test('test isThreadPassWord method with valid password', function(done) {
             Thread.isThreadPassWord(testIds.threadId, 'azerty')
                 .then(({isMatch, thread})=>{
-                    assertIsValidThread(thread)
+                    IsValidObjectThread(thread)
                     assert.isTrue(
                         isMatch,
                         'Valid massword should match');
@@ -260,8 +285,8 @@ suite('Mongo db unit tests', function(){
         test('test addReply method', function(done) {
             Thread.addReply(testIds.threadIdReplyTest, 'Add reply to unit test thread', 'azerty')
                 .then(thread=>{
-                    assertIsValidThread(thread)
-                    assertIsValidThreadReply(thread.replies[0])
+                    IsValidObjectThread(thread)
+                    IsValidObjectReplyThread(thread.replies[0])
                     assert.strictEqual(
                         thread.replies.length, 1,
                         'Array of replies should have length 0');
@@ -276,9 +301,9 @@ suite('Mongo db unit tests', function(){
         test('test add second reply', function(done) {
             Thread.addReply(testIds.threadIdReplyTest, 'Add reply 2 to unit test thread', 'azerty')
                 .then(thread=>{
-                    assertIsValidThread(thread)
-                    assertIsValidThreadReply(thread.replies[0])
-                    assertIsValidThreadReply(thread.replies[1])
+                    IsValidObjectThread(thread)
+                    IsValidObjectReplyThread(thread.replies[0])
+                    IsValidObjectReplyThread(thread.replies[1])
                     assert.strictEqual(
                         thread.replies.length, 2,
                         'Array of replies should have length 2');
@@ -293,9 +318,9 @@ suite('Mongo db unit tests', function(){
         test('test getReplies method', function(done) {
             Thread.getReplies(testIds.threadIdReplyTest)
                 .then(thread=>{
-                    assertIsValidThread(thread)
-                    assertIsValidThreadReply(thread.replies[0])
-                    assertIsValidThreadReply(thread.replies[1])
+                    IsValidShowThread(thread)
+                    IsValidShowReplyThread(thread.replies[0])
+                    IsValidShowReplyThread(thread.replies[1])
                     assert.strictEqual(
                         thread.replies.length, 2,
                         'Array of replies should have length 2');
@@ -309,8 +334,8 @@ suite('Mongo db unit tests', function(){
         test('test getReply method', function(done) {
             Thread.getReply(testIds.threadIdReplyTest, testIds.replyId)
                 .then(thread=>{
-                    assertIsValidThread(thread)
-                    assertIsValidThreadReply(thread.replies[0])
+                    IsValidObjectThread(thread)
+                    IsValidObjectReplyThread(thread.replies[0])
                     assert.strictEqual(
                         thread.replies.length, 1,
                         'Array of replies should have length 1');
@@ -324,8 +349,8 @@ suite('Mongo db unit tests', function(){
         test('test reportReply method', function(done) {
             Thread.reportReply(testIds.threadIdReplyTest, testIds.replyId)
                 .then(thread=>{
-                    assertIsValidThread(thread)
-                    assertIsValidThreadReply(thread.replies[0])
+                    IsValidObjectThread(thread)
+                    IsValidObjectReplyThread(thread.replies[0])
                     assert.strictEqual(
                         thread.replies.length, 1,
                         'Array of replies should have length 1'
@@ -361,8 +386,8 @@ suite('Mongo db unit tests', function(){
         test('test isValidReplyPassWord method with valid password', function(done) {
             Thread.isValidReplyPassWord(testIds.threadIdReplyTest, testIds.replyId, "azerty")
                 .then(({isMatch, thread})=>{
-                    assertIsValidThread(thread)
-                    assertIsValidThreadReply(thread.replies[0])
+                    IsValidObjectThread(thread)
+                    IsValidObjectReplyThread(thread.replies[0])
                     assert.strictEqual(
                         thread.replies.length, 1,
                         'Array of replies should have length 1'

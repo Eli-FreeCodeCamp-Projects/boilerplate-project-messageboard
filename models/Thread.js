@@ -4,7 +4,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const MongoHelper = require('../utils/mongoHelper');
 const Ut = require('../utils/utils');
 
-const hashSaltRounds = 15;
+const hashSaltRounds = 8;
 
 const ReplySchema = new mongoose.Schema({
     _id:{
@@ -33,8 +33,8 @@ const ReplySchema = new mongoose.Schema({
         trim: true
     },
     created_on: {
-        type: String,
-        default: MongoHelper.getIsoDate(),
+        type: Date,
+        default: new Date(),
     },
     reported: {
         type: Boolean,
@@ -86,12 +86,12 @@ const threadsSchema = new mongoose.Schema(
             trim: true
         },
         created_on: {
-            type: String,
-            default: MongoHelper.getIsoDate(),
+            type: Date,
+            default: new Date(),
         },
         bumped_on: {
-            type: String,
-            default: MongoHelper.getIsoDate(),
+            type: Date,
+            default: new Date(),
         },
         reported: {
             type: Boolean,
@@ -107,6 +107,45 @@ const threadsSchema = new mongoose.Schema(
                 return [
                     "_id", "text", "created_on", "replies", "bumped_on"
                 ]
+            },
+            getreplyKeys(){
+                return [
+                    "_id", "text", "created_on"
+                ]
+            },
+            filterRepliesFields(replies){
+                let result = null;
+                if(Ut.isArray(replies)){
+                    result = replies.map(obj=>{
+                        return {
+                            _id: obj._id.toString(),
+                            text: obj.text,
+                            created_on: obj.created_on.toISOString()
+                        }
+                    })
+                }
+                return result
+            },
+            filterThreadFields(thread){
+                if(Ut.isObject(thread)){
+                    return {
+                        _id: thread._id.toString(),
+                        text: thread.text,
+                        created_on: thread.created_on.toISOString(),
+                        bumped_on: thread.bumped_on.toISOString(),
+                        replies: this.filterRepliesFields(thread.replies),
+                    }
+                }
+                return null
+            },
+            filterThreadsFields(threads){
+                let result = null;
+                if(Ut.isArray(threads)){
+                    result = threads.map(obj=>{
+                        return this.filterThreadFields(obj)
+                    })
+                }
+                return result
             },
             /**
              * 
@@ -130,7 +169,7 @@ const threadsSchema = new mongoose.Schema(
                         .limit(limit)
                         .slice('replies', limitReplies)
                         .then(threads=>{
-                            resolve(threads)
+                            resolve(this.filterThreadsFields(threads))
                         })
                         .catch((err)=>{
                             reject({error: "Unable to get threads from board", info: err})
@@ -247,7 +286,12 @@ const threadsSchema = new mongoose.Schema(
                 return new Promise((resolve, reject) => {
                     this.getThread(threadId)
                         .then(thread=>{
-                            resolve(thread)
+                            if(Ut.isObject(thread)){
+                                resolve(resolve(this.filterThreadFields(thread)))
+                            }
+                            else{
+                                resolve(null)
+                            }
                         })
                         .catch((err)=>{
                             reject({error: "Unable to delete thread!", info: err})
@@ -283,7 +327,7 @@ const threadsSchema = new mongoose.Schema(
                                 threadId, 
                                 {
                                     $push: {replies: {text: text, delete_password: hash}},
-                                    bumped_on: MongoHelper.getIsoDate()
+                                    bumped_on: new Date()
                                 },
                                 {
                                     returnDocument: 'after',
