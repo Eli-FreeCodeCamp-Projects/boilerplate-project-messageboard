@@ -24,11 +24,11 @@ app.use(helmet({
       imgSrc: ["'self'", 'cdn.freecodecamp.org'],
       FormAction: ["'self'"],
       baseUri: ["'self'"],
-      frameAncestors: ["'self'"],
+      //frameAncestors: ["'self'"],
       connectSrc: ["'self'"],
     }
   },
-  dnsPrefetchControl: false,     // disable,
+  dnsPrefetchControl: { allow: false },     // disable,
   xFrameOptions: { action: "sameorigin" },
   strictTransportSecurity: {
     includeSubDomains: true,
