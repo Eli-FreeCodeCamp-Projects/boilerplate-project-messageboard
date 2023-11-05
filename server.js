@@ -29,7 +29,7 @@ app.use(helmet({
     }
   },
   dnsPrefetchControl: false,     // disable,
-  xFrameOptions: { action: "deny" },
+  xFrameOptions: { action: "sameorigin" },
   strictTransportSecurity: {
     maxAge: ninetyDaysInSeconds,
     includeSubDomains: true,
