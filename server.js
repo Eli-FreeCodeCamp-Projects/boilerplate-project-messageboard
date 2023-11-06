@@ -24,7 +24,7 @@ app.use(helmet({
       imgSrc: ["'self'", 'cdn.freecodecamp.org'],
       FormAction: ["'self'"],
       baseUri: ["'self'"],
-      //frameAncestors: ["'self'"],
+      frameAncestors: ["'self'", "replit.com"],
       connectSrc: ["'self'"],
     }
   },
@@ -38,7 +38,10 @@ app.use(helmet({
     policy: "same-origin"
   }
 }));
-
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  next();
+});
 //-> Connect to mongo db
 mongoose.connect(
   process.env['MONGO_URI'])

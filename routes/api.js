@@ -6,6 +6,17 @@ const threadSchema = require('../validation/threadSchema')
 const mid = require('../middlewares/api-mid')
 module.exports = function (app) {
 
+  app.route('/api/threads/delete-all')
+  .get(function (req, res) {
+    Thread.deleteMany()
+      .then((data)=>{
+        res.json(data)
+      })
+      .catch((err)=>{
+        res.json(err)
+      })
+  })
+  
   app.route('/api/threads/:board')
     .get([
       mid.setApiContentType,
@@ -35,8 +46,7 @@ module.exports = function (app) {
         const password = req.body.delete_password
         Thread.addThread(board, text, password)
           .then(thread => {
-
-            res.json(Ut.filterObjectByKey(thread.toObject(), Thread.getThreadKeys()))
+            res.json(thread.toObject())
           })
           .catch((err) => {
             res.json(err)
@@ -49,13 +59,13 @@ module.exports = function (app) {
       mid.validateApi
     ],
       function (req, res) {
-        const _id = req.body.report_id
+        const _id = req.body.thread_id
         Thread.reportThread(_id)
           .then(report => {
-            res.json("reported")
+              res.status(200).send("reported")
           })
           .catch(e => {
-            res.json("Unable to repport thread")
+              res.status(200).send("Unable to repport thread")
           })
       })
 
@@ -71,10 +81,10 @@ module.exports = function (app) {
         Thread.deleteThread(_id, delete_password)
           .then(result => {
             if (result) {
-              res.json('success')
+                res.status(200).send('success')
             }
             else {
-              res.json('incorrect password')
+                res.status(200).send('incorrect password')
             }
           })
           .catch(e => {
@@ -111,7 +121,7 @@ module.exports = function (app) {
         Thread.addReply(thread_id, text, password)
           .then(thread => {
             if (Ut.isObject(thread)) {
-              res.json(Ut.filterObjectByKey(thread.toObject(), Thread.getThreadKeys()))
+              res.json(thread.toObject())
             }
             else {
               res.json(`Thread with id ${thread_id} is not reachable.`)
@@ -133,14 +143,14 @@ module.exports = function (app) {
         Thread.reportReply(thread_id, reply_id)
           .then(thread => {
             if (Ut.isObject(thread)) {
-              res.json("reported")
+                res.status(200).send("reported")
             }
             else {
-              res.json("Unable to report thread, inexistant in data base.")
+                res.status(200).send("Unable to report thread, inexistant in data base.")
             }
           })
           .catch(e => {
-            res.json("Unable to repport thread")
+              res.status(200).send("Unable to repport thread")
           })
       })
 
@@ -156,15 +166,14 @@ module.exports = function (app) {
         Thread.deleteReply(thread_id, reply_id, delete_password)
           .then(isDeleted => {
             if (isDeleted === true) {
-              req.body.reply_id = "[deleted]"
-              res.json('success')
+              res.status(200).send('success')
             }
             else {
-              res.json('incorrect password')
+              res.status(200).send('incorrect password')
             }
           })
           .catch(e => {
-            res.json("Unable to delete reply")
+              res.status(200).send("Unable to delete reply")
           })
       })
 };

@@ -53,7 +53,7 @@ const postThreadSchema = {
 }
 
 const putThreadSchema = {
-    report_id: threadSchema._id
+      thread_id: threadSchema._id
 }
 
 const deleteThreadSchema = {

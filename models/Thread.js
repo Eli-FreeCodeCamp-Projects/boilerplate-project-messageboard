@@ -321,13 +321,14 @@ const threadsSchema = new mongoose.Schema(
             },
             addReply(threadId, text, password){
                 return new Promise((resolve, reject) => {
+                    const now = new Date();
                     MongoHelper.hashPassword(password, hashSaltRounds)
                         .then(hash=>{
                             this.findByIdAndUpdate(
                                 threadId, 
                                 {
-                                    $push: {replies: {text: text, delete_password: hash}},
-                                    bumped_on: new Date()
+                                    $push: {replies: {text: text, delete_password: hash, created_on: now}},
+                                    bumped_on: now
                                 },
                                 {
                                     returnDocument: 'after',

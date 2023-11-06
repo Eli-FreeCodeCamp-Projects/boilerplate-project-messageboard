@@ -73,9 +73,9 @@ suite('Functional Tests', function() {
                     thread_id: threadId,
                     delete_password: 'bad'
                 })
-                .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.strictEqual(res.body, 'incorrect password');
+                .end(function (res) {
+                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.rawResponse, 'incorrect password');
                     done();
                 });
         });
@@ -86,11 +86,11 @@ suite('Functional Tests', function() {
                 .put('/api/threads/general')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
-                    report_id: threadId
+                      thread_id: threadId
                 })
-                .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.strictEqual(res.body, 'reported');
+                .end(function (res) {
+                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.rawResponse, 'reported');
                     done();
                 });
         });
@@ -104,9 +104,9 @@ suite('Functional Tests', function() {
                     thread_id: threadId,
                     delete_password: 'azerty'
                 })
-                .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.strictEqual(res.body, 'success');
+                .end(function (res) {
+                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.rawResponse, 'success');
                     done();
                 });
         });
@@ -167,9 +167,9 @@ suite('Functional Tests', function() {
                     reply_id: replyId,
                     delete_password: 'bad'
                 })
-                .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.strictEqual(res.body, 'incorrect password');
+                .end(function (res) {
+                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.rawResponse, 'incorrect password');
                     done();
                 });
         });
@@ -183,9 +183,9 @@ suite('Functional Tests', function() {
                     thread_id: threadIdForReply,
                     reply_id: replyId
                 })
-                .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.strictEqual(res.body, 'reported');
+                .end(function (res) {
+                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.rawResponse, 'reported');
                     done();
                 });
         });
@@ -200,9 +200,9 @@ suite('Functional Tests', function() {
                     reply_id: replyId,
                     delete_password: 'azerty'
                 })
-                .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.strictEqual(res.body, 'success');
+                .end(function (res) {
+                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.rawResponse, 'success');
                     done();
                 });
         });
